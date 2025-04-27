@@ -12,7 +12,7 @@ nltk.download('punkt')
 
 @st.cache_data
 def load_data():
-    data = pd.read_csv('your_dataset.csv')  # Make sure you upload this to GitHub too
+    data = pd.read_csv('combined_output.csv')
     data['metadata'] = data['Genre'] + ' ' + data['Cast'] + ' ' + data['Synopsis']
     return data
 
