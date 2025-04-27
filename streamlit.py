@@ -1,19 +1,13 @@
 import streamlit as st
-import nltk
-try:
-    nltk.data.find('tokenizers/punkt')
-except LookupError:
-    nltk.download('punkt')
-
-# nltk.download('punkt_tab')
-
 import pandas as pd
 from gensim.models.doc2vec import Doc2Vec, TaggedDocument
-from nltk.tokenize import word_tokenize
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.neighbors import NearestNeighbors
 import numpy as np
+
+def simple_tokenizer(text):
+    return text.lower().split()
 
 @st.cache_data
 def load_data():
@@ -26,14 +20,14 @@ data = load_data()
 @st.cache_resource
 def train_doc2vec(data):
     documents = [
-        TaggedDocument(words=word_tokenize(text.lower()), tags=[str(i)])
+        TaggedDocument(words=simple_tokenizer(text), tags=[str(i)])
         for i, text in enumerate(data['metadata'])
     ]
     model = Doc2Vec(vector_size=150, window=5, min_count=2, workers=4, epochs=40, negative=5)
     model.build_vocab(documents)
     model.train(documents, total_examples=model.corpus_count, epochs=model.epochs)
     
-    doc_vectors = [model.infer_vector(word_tokenize(text.lower())) for text in data['metadata']]
+    doc_vectors = [model.infer_vector(simple_tokenizer(text)) for text in data['metadata']]
     return np.array(doc_vectors)
 
 doc_vectors = train_doc2vec(data)
