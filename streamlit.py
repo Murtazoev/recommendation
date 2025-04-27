@@ -7,7 +7,7 @@ from sklearn.neighbors import NearestNeighbors
 import numpy as np
 
 def simple_tokenizer(text):
-    return text.lower().split()
+    return str(text).lower().split()
 
 @st.cache_data
 def load_data():
