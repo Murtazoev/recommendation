@@ -1,4 +1,9 @@
 import streamlit as st
+import nltk
+
+nltk.download('punkt')
+nltk.download('punkt_tab')
+
 import pandas as pd
 from gensim.models.doc2vec import Doc2Vec, TaggedDocument
 from nltk.tokenize import word_tokenize
@@ -6,9 +11,6 @@ from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.neighbors import NearestNeighbors
 import numpy as np
-import nltk
-
-nltk.download('punkt')
 
 @st.cache_data
 def load_data():
