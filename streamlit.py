@@ -25,8 +25,8 @@ def load_doc2vec_model():
 model = load_doc2vec_model()
 
 @st.cache_resource
-def generate_doc_vectors(data, model):
-    doc_vectors = [model.infer_vector(simple_tokenizer(text)) for text in data['metadata']]
+def generate_doc_vectors(data, _model):
+    doc_vectors = [_model.infer_vector(simple_tokenizer(text)) for text in data['metadata']]
     return np.array(doc_vectors)
 
 doc_vectors = generate_doc_vectors(data, model)
