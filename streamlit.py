@@ -1,8 +1,11 @@
 import streamlit as st
 import nltk
+try:
+    nltk.data.find('tokenizers/punkt')
+except LookupError:
+    nltk.download('punkt')
 
-nltk.download('punkt')
-nltk.download('punkt_tab')
+# nltk.download('punkt_tab')
 
 import pandas as pd
 from gensim.models.doc2vec import Doc2Vec, TaggedDocument
