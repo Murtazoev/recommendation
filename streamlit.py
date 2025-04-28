@@ -46,27 +46,34 @@ def setup_collab(data):
 
 knn, collab_scaled = setup_collab(data)
 
-def recommend_hybrid(title, top_n=5):
-    idx = data[data['Title'] == title].index[0]
+def recommend_hybrid(selected_titles, top_n=5):
+    if not selected_titles:
+        return []
 
-    query_vector = doc_vectors[idx].reshape(1, -1)
-    content_sim = cosine_similarity(query_vector, doc_vectors)[0]
+    indices = data[data['Title'].isin(selected_titles)].index.tolist()
 
-    _, collab_indices = knn.kneighbors([collab_scaled[idx]], n_neighbors=top_n + 1)
-    collab_indices = collab_indices[0][1:]
+    query_vectors = np.array([doc_vectors[idx] for idx in indices])
+    avg_query_vector = np.mean(query_vectors, axis=0).reshape(1, -1)
+
+    content_sim = cosine_similarity(avg_query_vector, doc_vectors)[0]
+
+    _, collab_indices = knn.kneighbors([np.mean(collab_scaled[indices], axis=0)], n_neighbors=top_n + len(selected_titles) + 1)
+    collab_indices = collab_indices[0]
 
     hybrid_scores = content_sim.copy()
     hybrid_scores[collab_indices] += 1
 
-    hybrid_scores[idx] = -np.inf
+    for idx in indices:
+        hybrid_scores[idx] = -np.inf
 
-    top_indices = hybrid_scores.argsort()[::-1][1:top_n+1]
+    top_indices = hybrid_scores.argsort()[::-1][:top_n]
     return data['Title'].iloc[top_indices]
 
-# --- Streamlit App ---
+
 st.title('🎬 TV Series Recommender System (Hybrid Model)')
 
 selected_title = st.selectbox('Select a TV Show:', data['Title'].values)
+selected_titles = st.multiselect('Select one or more TV Shows:', sample_data['Title'].values)
 
 top_k = st.slider('How many recommendations?', 1, 20, 5)
 
