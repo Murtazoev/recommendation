@@ -72,13 +72,13 @@ def recommend_hybrid(selected_titles, top_n=5):
 
 st.title('🎬 TV Series Recommender System (Hybrid Model)')
 
-selected_title = st.selectbox('Select a TV Show:', data['Title'].values)
+#selected_title = st.selectbox('Select a TV Show:', data['Title'].values)
 selected_titles = st.multiselect('Select one or more TV Shows:', data['Title'].values)
 
 top_k = st.slider('How many recommendations?', 1, 20, 5)
 
 if st.button('Get Recommendations'):
-    recommendations = recommend_hybrid(selected_title, top_n=top_k)
+    recommendations = recommend_hybrid(selected_titles, top_n=top_k)
     st.subheader('Recommended TV Shows:')
     for show in recommendations:
         st.write(show)
