@@ -12,6 +12,7 @@ def simple_tokenizer(text):
 @st.cache_data
 def load_data():
     data = pd.read_csv('combined_output.csv')
+    data = data.drop_duplicates(subset = 'Title')
     data['metadata'] = data['Genre'] + ' ' + data['Cast'] + ' ' + data['Synopsis']
     sample_data = data.sample(n=10000, random_state=42)
     return sample_data.reset_index(drop=True)
