@@ -13,7 +13,8 @@ def simple_tokenizer(text):
 def load_data():
     data = pd.read_csv('combined_output.csv')
     data['metadata'] = data['Genre'] + ' ' + data['Cast'] + ' ' + data['Synopsis']
-    return data
+    sample_data = data.sample(n=10000, random_state=42)
+    return sample_data.reset_index(drop=True)
 
 data = load_data()
 
@@ -59,12 +60,15 @@ def recommend_hybrid(title, top_n=5):
     top_indices = hybrid_scores.argsort()[::-1][1:top_n+1]
     return data['Title'].iloc[top_indices]
 
+# --- Streamlit App ---
 st.title('🎬 TV Series Recommender System (Hybrid Model)')
 
 selected_title = st.selectbox('Select a TV Show:', data['Title'].values)
 
+top_k = st.slider('How many recommendations?', 1, 20, 5)
+
 if st.button('Get Recommendations'):
-    recommendations = recommend_hybrid(selected_title)
+    recommendations = recommend_hybrid(selected_title, top_n=top_k)
     st.subheader('Recommended TV Shows:')
     for show in recommendations:
         st.write(show)
