@@ -73,7 +73,7 @@ def recommend_hybrid(selected_titles, top_n=5):
 st.title('🎬 TV Series Recommender System (Hybrid Model)')
 
 selected_title = st.selectbox('Select a TV Show:', data['Title'].values)
-selected_titles = st.multiselect('Select one or more TV Shows:', sample_data['Title'].values)
+selected_titles = st.multiselect('Select one or more TV Shows:', data['Title'].values)
 
 top_k = st.slider('How many recommendations?', 1, 20, 5)
 
