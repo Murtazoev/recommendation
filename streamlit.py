@@ -58,6 +58,8 @@ def recommend_hybrid(title, top_n=5):
     hybrid_scores = content_sim.copy()
     hybrid_scores[collab_indices] += 1
 
+    hybrid_scores[idx] = -np.inf
+
     top_indices = hybrid_scores.argsort()[::-1][1:top_n+1]
     return data['Title'].iloc[top_indices]
 
